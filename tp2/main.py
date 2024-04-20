@@ -21,9 +21,14 @@ from grammar import grammar
 
 p = Lark(grammar) # cria um objeto parser
 
-string_test = ""
-tree = p.parse(string_test)  # retorna uma tree
+string_test = """
+int y; 
+int x = 10 + 23; 
+x = 10;
+dict d = {1: "oi", "teste" : [1,2,3]};
+"""
 
+tree = p.parse(string_test)  # retorna uma tree
 
 class InterpreterIntervalos(Interpreter):
     def __init__(self):
@@ -109,5 +114,4 @@ class InterpreterIntervalos(Interpreter):
             self.symbols['instructions']['cycle'] += 1
 
 data = InterpreterIntervalos().visit(tree)
-
-
+print(data)
