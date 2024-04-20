@@ -36,16 +36,26 @@ bool: "TRUE"
     | "FALSE"
 
 int : NUMBER
+
 string: STR
+
 tuplo: PE objeto [VIR objeto]* PD
+
 array: PRE  PRD 
      | PRE objeto PRD 
      | PRE objeto (VIR objeto)* PRD
+
 lista: PRE PRD 
      | PRE objeto lista* PRD
+
 set: CE CD 
    | CE objeto CD 
    | CE objeto VIR set* CD
+
+dict: CE key DP objeto (VIR key DP objeto)* CD
+key: int
+   | string
+
 objeto: int
     | bool 
     | string 
@@ -53,13 +63,17 @@ objeto: int
     | array 
     | lista 
     | set
+    | dict
+
 var: /[a-zA-Z]\w*/ 
 
 termo: var
      | int
+
 conjunto: array 
         | set 
         | lista
+        | dict
      
 operador: PLUS 
         | MINUS 
@@ -80,6 +94,7 @@ tipo: INT
     | ARRAY 
     | LISTA 
     | SET
+    | DICT
 
 //Regras Lexicograficas
 DP: ":"
@@ -100,6 +115,7 @@ TUPLO: "tuplo"
 ARRAY: "array" 
 LISTA: "lista" 
 SET: "set"
+DICT: "dict"
 PLUS: "+" 
 MINUS: "-" 
 MULT: "*" 
@@ -124,5 +140,11 @@ frase = """
 int y; 
 int x = 10 + 23; 
 x = 10;
+dict d = {1: "oi", "teste" : [1,2,3]};
 """
 
+p = Lark(grammar)
+
+tree = p.parse(frase)
+print(tree)
+print(tree.pretty())
