@@ -18,6 +18,7 @@
 from lark import Lark
 from lark.visitors import Interpreter
 from grammar import grammar
+from json2html import *
 
 p = Lark(grammar) # cria um objeto parser
 
@@ -177,12 +178,16 @@ class InterpreterIntervalos(Interpreter):
 
 
 data = InterpreterIntervalos().visit(tree)
-print(f"""
-Vars : {data['vars']}\n
-Types: {data['types']}\n
-Instru: {data['instructions']}\n
-Errors: {data['errors']}\n
-""")
+#print(f"""
+#Vars : {data['vars']}\n
+#Types: {data['types']}\n
+#Instru: {data['instructions']}\n
+#Errors: {data['errors']}\n
+#""")
+
+f = open("result.html",'w')
+f.write(json2html.convert(json=data))
+f.close()
 
 # estrutura para ser imprimida no html:
 
