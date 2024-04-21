@@ -28,11 +28,11 @@ x = 10;
 dict d = {1: "oi", "teste" : [1,2,3]};
 """
 
-tree = p.parse(string_test)  # retorna uma tree
+tree = p.parse(string_test) # retorna uma tree
 
 class InterpreterIntervalos(Interpreter):
     def __init__(self):
-        symbols = {
+        self.symbols = {
             'vars' : {},
             'types' : {},
             'instructions' : {
@@ -52,19 +52,19 @@ class InterpreterIntervalos(Interpreter):
 
     def declaracao(self,tree):
         # tratar tipo
-        if tree[0] in self.symbols["types"].keys():
-            self.symbols["types"][tree[0]] += 1
+        if tree.children[0] in self.symbols['types'].keys():
+            self.symbols['types'][tree.children[0]] += 1
         else:
-            self.symbols["types"][tree[0]] = 1
+            self.symbols['types'][tree.children[0]] = 1
         
         # tratar variavel
-        if tree[1] in vars["name"]:
-            self.symbols['errors']["redeclarations"] += 1
-            self.symbols["vars"][tree[1]]['redeclaration?'] = True
+        if tree.children[1] in self.symbols['vars']['name']:
+            self.symbols['errors']['redeclarations'] += 1
+            self.symbols['vars'][tree.children[1]]['redeclaration?'] = True
 
         else:
-            self.symbols['vars'][tree[1]] = {
-                'type': tree[0],
+            self.symbols['vars'][tree.children[1]] = {
+                'type': tree.children[0],
                 'declaration?': True,
                 'redeclaration?': False,
                 'inicialization?': False,
@@ -73,19 +73,19 @@ class InterpreterIntervalos(Interpreter):
 
     def inicializacao(self,tree):
         # tratar tipo
-        if tree[0] in self.symbols["types"].keys():
-            self.symbols["types"][tree[0]] += 1
+        if tree.children[0] in self.symbols['types'].keys():
+            self.symbols['types'][tree.children[0]] += 1
         else:
-            self.symbols["types"][tree[0]] = 1
+            self.symbols['types'][tree.children[0]] = 1
         
         # tratar variavel
-        if tree[1] in vars["name"]:
-            self.symbols['errors']["redeclarations"] += 1
-            self.symbols["vars"][tree[1]]['redeclaration?'] = True
+        if tree.children[1] in self.symbols['vars']['name']:
+            self.symbols['errors']['redeclarations'] += 1
+            self.symbols['vars'][tree.children[1]]['redeclaration?'] = True
 
         else:
-            self.symbols['vars'][tree[1]] = {
-                'type': tree[0],
+            self.symbols['vars'][tree.children[1]] = {
+                'type': tree.children[0],
                 'declaration?': True,
                 'redeclaration?': False,
                 'inicialization?': True,
@@ -93,24 +93,24 @@ class InterpreterIntervalos(Interpreter):
         }
 
     def atribuicao(self,tree):
-        if tree[1] not in vars["name"]:
+        if tree.children[1] not in self.symbols['vars']['name']:
             self.symbols['errors']['not_declared'] += 1
-        self.symbols['vars'][tree[1]]['used'] = True
+        self.symbols['vars'][tree.children[1]]['used'] = True
 
     def var(self, tree):
         if tree not in self.symbols['vars'].keys():
-            self.symbols['vars'][tree] = [tree, "", False, False, False, 0]
+            self.symbols['vars'][tree] = [tree, '', False, False, False, 0]
         else:
             self.symbols['vars'][tree]['used'] += 1
 
-    def expressao(self, tree, args):
-        if args[0] == "atribuicao":    
+    def expressao(self, tree):
+        if tree.data == 'atribuicao':    
             self.symbols['instructions']['assign'] +=1
-        elif args[0] == "operacao":
+        elif tree.data == 'operacao':
             self.symbols['instructions']['read_write'] += 1
-        elif args[0] == "condicional":
+        elif tree.data == 'condicional':
             self.symbols['instructions']['conditional'] += 1
-        elif args[0] == "ciclo":
+        elif tree.data == 'ciclo':
             self.symbols['instructions']['cycle'] += 1
 
 data = InterpreterIntervalos().visit(tree)

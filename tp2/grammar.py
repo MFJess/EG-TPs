@@ -136,15 +136,15 @@ SC: ";"
 %ignore "\\n"
 """
 
-frase = """
-int y; 
-int x = 10 + 23; 
-x = 10;
-dict d = {1: "oi", "teste" : [1,2,3]};
-"""
+# frase = """
+# int y; 
+# int x = 10 + 23; 
+# x = 10;
+# dict d = {1: "oi", "teste" : [1,2,3]};
+# """
 
-p = Lark(grammar)
+# p = Lark(grammar)
 
-tree = p.parse(frase)
-print(tree)
-print(tree.pretty())
+# tree = p.parse(frase)
+# print(tree)
+# print(tree.pretty())
