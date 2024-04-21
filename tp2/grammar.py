@@ -18,20 +18,21 @@ operacao: termo operador termo
 
 condicional: alternativa 
            | casos
-alternativa: IF PE condicao PD CE expressao+ CD 
+alternativa: IF PE condicao PD CE (expressao SC)+ CD 
 		   | IF PE condicao PD CE expressao+ CD ELSE CE expressao+ CD
 casos: "match" PE var PD CE "case" objeto DP expressao* "case" "_" DP expressao* CD
 
 ciclo: enquanto 
      | repete 
      | percorre
-enquanto: "while" PE condicao PD CE expressao* CD 
+enquanto: "while" PE condicao PD CE (expressao SC)* CD 
 repete: "do" CE expressao* CD "while" PE condicao PD
 percorre: "for" var "in" conjunto CE expressao* CD
 
 condicao: int 
         | bool 
         | operacao 
+        | var
 bool: "TRUE" 
     | "FALSE"
 
@@ -74,6 +75,7 @@ conjunto: array
         | set 
         | lista
         | dict
+        | var
      
 operador: PLUS 
         | MINUS 

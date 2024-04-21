@@ -24,8 +24,37 @@ p = Lark(grammar) # cria um objeto parser
 string_test = """
 int y; 
 int x = 10 + 23; 
-x = 10;
+
+y = 10;
+z + 10;
+
+int x = 2;
+int z = y + x;
+
+bool t = TRUE;
+bool f = FALSE;
+
+string w = "Hello";
+
+array a = [1,2,3];
+
+lista l = [1,"List",TRUE];
+
+lista vl = [];
+
 dict d = {1: "oi", "teste" : [1,2,3]};
+
+set s = {};
+
+if (t) {x + 1; y-1;};
+
+while(t){x * 2; t = FALSE;};
+
+do{}while(x == 10);
+
+for i in [3,5,6]{k = z + i};
+
+for i in l {j = x / i};
 """
 
 tree = p.parse(string_test) # retorna uma tree
@@ -52,29 +81,12 @@ class InterpreterIntervalos(Interpreter):
         self.visit_children(tree)
         return self.symbols
     
-    def expressao(self, tree):
-        tree_data = tree.children[0].data
-
-        if tree_data == 'atribuicao':    
-            self.symbols['instructions']['assign'] +=1
-        elif tree_data == 'operacao':
-            self.symbols['instructions']['read_write'] += 1
-        elif tree_data == 'condicional':
-            self.symbols['instructions']['conditional'] += 1
-        elif tree_data == 'ciclo':
-            self.symbols['instructions']['cycle'] += 1
-        
+    def expressao(self, tree):    
         self.visit(tree.children[0])
 
     def declaracao(self,tree):
         var_type = tree.children[0].children[0].value
         var_name = tree.children[1].children[0].value
-
-        # tratar tipo
-        if var_type in self.symbols['types'].keys():
-            self.symbols['types'][var_type] += 1
-        else:
-            self.symbols['types'][var_type] = 1
         
         # tratar variavel
         if var_name in self.symbols['vars'].keys():
@@ -87,18 +99,18 @@ class InterpreterIntervalos(Interpreter):
                 'declaration?': True,
                 'redeclaration?': False,
                 'inicialization?': False,
-                'used': False
-        }
+                'used': 0
+            }
+
+            # tratar tipo
+            if var_type in self.symbols['types'].keys():
+                self.symbols['types'][var_type] += 1
+            else:
+                self.symbols['types'][var_type] = 1
 
     def inicializacao(self,tree):
         var_type = tree.children[0].children[0].value
         var_name = tree.children[1].children[0].value
-        
-        # tratar tipo
-        if var_type in self.symbols['types'].keys():
-            self.symbols['types'][var_type] += 1
-        else:
-            self.symbols['types'][var_type] = 1
         
         # tratar variavel
         if var_name in self.symbols['vars'].keys():
@@ -112,26 +124,65 @@ class InterpreterIntervalos(Interpreter):
                 'redeclaration?': False,
                 'inicialization?': True,
                 'used': 0
-        }
+            }
+            
+            # tratar tipo
+            if var_type in self.symbols['types'].keys():
+                self.symbols['types'][var_type] += 1
+            else:
+                self.symbols['types'][var_type] = 1
+            
+        self.visit(tree.children[2])
 
     def atribuicao(self,tree):
+        self.symbols['instructions']['assign'] +=1
+
         var_name = tree.children[0].children[0].value
 
         if var_name not in self.symbols['vars'].keys():
             self.symbols['errors']['not_declared'] += 1
         
-        self.symbols['vars'][var_name]['used'] = True
-
-    # Precisamos deste? já tratamos as variaveis antes
-    '''def var(self, tree):
-        if tree not in self.symbols['vars'].keys():
-            self.symbols['vars'][tree] = [tree, '', False, False, False, 0]
         else:
-            self.symbols['vars'][tree]['used'] += 1'''
+            self.symbols['vars'][var_name]['used'] += 1
+
+        self.visit(tree.children[1])
+
+    def operacao(self, tree):
+        self.symbols['instructions']['read_write'] += 1
+        self.visit_children(tree)
+
+    def condicional(self, tree):
+        self.symbols['instructions']['conditional'] += 1
+        self.visit_children(tree)
+
+    def ciclo(self, tree):
+        self.symbols['instructions']['cycle'] += 1
+        self.visit_children(tree)
+    
+    def var(self, tree):
+        var_name = tree.children[0].value
+        if var_name not in self.symbols['vars'].keys():
+            #self.symbols['vars'][var_name] = [tree, '', False, False, False, 0]
+            self.symbols['vars'][var_name] = {
+                'type': '',
+                'declaration?': False,
+                'redeclaration?': False,
+                'inicialization?': False,
+                'used': 0
+            }
+
+            self.symbols['errors']['not_declared'] += 1
+        
+        self.symbols['vars'][var_name]['used'] += 1
 
 
 data = InterpreterIntervalos().visit(tree)
-print(data)
+print(f"""
+Vars : {data['vars']}\n
+Types: {data['types']}\n
+Instru: {data['instructions']}\n
+Errors: {data['errors']}\n
+""")
 
 # estrutura para ser imprimida no html:
 
