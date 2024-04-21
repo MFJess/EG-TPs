@@ -41,9 +41,6 @@ class InterpreterIntervalos(Interpreter):
                 'conditional' : 0,
                 'cycle' : 0
             },
-            'functions' : {
-
-            },
             'errors': {
                 'redeclarations' : 0,
                 'not_declared' : 0
@@ -115,3 +112,23 @@ class InterpreterIntervalos(Interpreter):
 
 data = InterpreterIntervalos().visit(tree)
 print(data)
+
+# estrutura para ser imprimida no html:
+
+# variáveis do programa: var1, var2, var3, var4
+# variáveis declaradas mais do que uma vez: var1 -> 2x; var2 -> 3x
+# variáveis usadas mas nunca inicializadas: var3, var4
+# variáveis declaradas mas nunca usadas: var1
+
+# tipos usados no programa
+# int: 3 
+# char: 2
+
+# total de instruções
+# atribuições: 4
+# leitura e escrita: 15
+# condicional: 7
+# ciclos: 2
+# total: 28
+
+# ...
