@@ -1,4 +1,4 @@
-from lark import Lark
+
 
 grammar = """
 //Regras Semanticas
@@ -137,16 +137,3 @@ SC: ";"
 %ignore WS_INLINE
 %ignore "\\n"
 """
-
-# frase = """
-# int y; 
-# int x = 10 + 23; 
-# x = 10;
-# dict d = {1: "oi", "teste" : [1,2,3]};
-# """
-
-# p = Lark(grammar)
-
-# tree = p.parse(frase)
-# print(tree)
-# print(tree.pretty())
