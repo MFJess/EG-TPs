@@ -36,9 +36,9 @@ while(t){x * 2; t = FALSE;};
 
 do{}while(x == 10);
 
-for i in [3,5,6]{k = z + i};
+for i in [3,5,6]{x = z + i};
 
-for i in l {j = x / i};
+for i in l {y = x / i};
 """
 
 tree = p.parse(string_test) # retorna uma tree
