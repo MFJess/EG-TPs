@@ -64,8 +64,8 @@ class InterpreterIntervalos(Interpreter):
         self.visit_children(tree)
         return self.symbols
     
-    def expressao(self, tree):    
-        self.visit(tree.children[0])
+    def expressao(self, tree): 
+        self.visit_children(tree)
 
     def declaracao(self,tree):
         var_type = tree.children[0].children[0].value

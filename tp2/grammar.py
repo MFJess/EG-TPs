@@ -1,5 +1,3 @@
-
-
 grammar = """
 //Regras Semanticas
 start: (expressao SC)+
