@@ -49,6 +49,15 @@ while(x >= 10) { if(x == 10) {x-1;};};
 
 tree = p.parse(string_test) # retorna uma tree
 
+def get_original_sentence(node):
+    if isinstance(node, str):
+        return node.value
+    
+    if hasattr(node, 'children'):
+        return ''.join(get_original_sentence(child) for child in node.children)
+    
+    return ''
+
 class InterpreterIntervalos(Interpreter):
     def __init__(self):
         self.symbols = {
@@ -64,7 +73,8 @@ class InterpreterIntervalos(Interpreter):
                 'redeclarations' : 0,
                 'not_declared' : 0
             },
-            'nested_control': 0
+            'nested_control': 0,
+            'complex_ifs' : []
         }
 
     def start(self,tree):
@@ -147,6 +157,10 @@ class InterpreterIntervalos(Interpreter):
         cond_control = [t.data for t in tree.find_data('condicional')]
 
         cycle_control = [t.data for t in tree.find_data('ciclo')]
+
+        if len(cond_control) == 2:
+            original_sentence = get_original_sentence(tree)
+            self.symbols['complex_ifs'].append(original_sentence)
         
         if len(cond_control) > 1 or len(cycle_control) > 0:
             self.symbols['nested_control'] += 1
