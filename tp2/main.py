@@ -32,6 +32,8 @@ set s = {};
 
 if (t) {x + 1; y-1;};
 
+if (f == FALSE) {if(t) {s = {TRUE}; };};
+
 while(t){x * 2; t = FALSE;};
 
 do{}while(x == 10);
@@ -39,6 +41,10 @@ do{}while(x == 10);
 for i in [3,5,6]{x = z + i};
 
 for i in l {y = x / i};
+
+while(f == FLASE) {while (t) { z-1; }; };
+
+while(x >= 10) { if(x == 10) {x-1;};};
 """
 
 tree = p.parse(string_test) # retorna uma tree
@@ -57,7 +63,8 @@ class InterpreterIntervalos(Interpreter):
             'errors': {
                 'redeclarations' : 0,
                 'not_declared' : 0
-            }
+            },
+            'nested_control': 0
         }
 
     def start(self,tree):
@@ -136,10 +143,26 @@ class InterpreterIntervalos(Interpreter):
 
     def condicional(self, tree):
         self.symbols['instructions']['conditional'] += 1
+        
+        cond_control = [t.data for t in tree.find_data('condicional')]
+
+        cycle_control = [t.data for t in tree.find_data('ciclo')]
+        
+        if len(cond_control) > 1 or len(cycle_control) > 0:
+            self.symbols['nested_control'] += 1
+        
         self.visit_children(tree)
 
     def ciclo(self, tree):
         self.symbols['instructions']['cycle'] += 1
+
+        cond_control = [t.data for t in tree.find_data('condicional')]
+
+        cycle_control = [t.data for t in tree.find_data('ciclo')]
+        
+        if len(cond_control) > 0 or len(cycle_control) > 1:
+            self.symbols['nested_control'] += 1
+
         self.visit_children(tree)
     
     def var(self, tree):

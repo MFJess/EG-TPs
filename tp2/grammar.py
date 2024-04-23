@@ -16,8 +16,8 @@ operacao: termo operador termo
 
 condicional: alternativa 
            | casos
-alternativa: IF PE condicao PD CE (expressao SC)+ CD 
-		   | IF PE condicao PD CE expressao+ CD ELSE CE expressao+ CD
+alternativa: IF PE condicao PD CE (expressao SC)* CD 
+		   | IF PE condicao PD CE expressao* CD SC ELSE CE expressao* CD
 casos: "match" PE var PD CE "case" objeto DP expressao* "case" "_" DP expressao* CD
 
 ciclo: enquanto 
