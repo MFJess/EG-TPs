@@ -9,8 +9,8 @@ expressao: atribuicao
          | ciclo
 
 declaracao: tipo var
-inicializacao: tipo var "=" [objeto|operacao]
-atribuicao: var "=" [objeto|operacao]
+inicializacao: tipo var EQ [objeto|operacao]
+atribuicao: var EQ [objeto|operacao]
 operacao: termo operador termo
         | termo operador (operacao)+ 
 
@@ -18,21 +18,21 @@ condicional: alternativa
            | casos
 alternativa: IF PE condicao PD CE (expressao SC)* CD 
 		   | IF PE condicao PD CE expressao* CD SC ELSE CE expressao* CD
-casos: "match" PE var PD CE "case" objeto DP expressao* "case" "_" DP expressao* CD
+casos: MATCH PE var PD CE CASE objeto DP expressao* CASE UDS DP expressao* CD
 
 ciclo: enquanto 
      | repete 
      | percorre
-enquanto: "while" PE condicao PD CE (expressao SC)* CD 
-repete: "do" CE expressao* CD "while" PE condicao PD
-percorre: "for" var "in" conjunto CE expressao* CD
+enquanto: WHILE PE condicao PD CE (expressao SC)* CD 
+repete: DO CE expressao* CD WHILE PE condicao PD
+percorre: FOR var IN conjunto CE expressao* CD
 
 condicao: int 
         | bool 
         | operacao 
         | var
-bool: "TRUE" 
-    | "FALSE"
+bool: TRUE 
+    | FALSE
 
 int : NUMBER
 
@@ -49,7 +49,7 @@ lista: PRE PRD
 
 set: CE CD 
    | CE objeto CD 
-   | CE objeto VIR set* CD
+   | CE objeto VIR objeto* CD
 
 dict: CE key DP objeto (VIR key DP objeto)* CD
 key: int
@@ -97,6 +97,7 @@ tipo: INT
     | DICT
 
 //Regras Lexicograficas
+EQ: "="
 DP: ":"
 PE: "("
 PD: ")"
@@ -105,6 +106,7 @@ PRD: "]"
 VIR: ","
 CE: "{"
 CD: "}"
+UDS: "_"
 IF: "if"
 ELSE: "else"
 CASE: "case"
@@ -130,6 +132,13 @@ GEQUAL:">="
 NUMBER: /\-?\d+/
 STR: /\"\w+\"/
 SC: ";" 
+TRUE: "TRUE"
+FALSE: "FALSE"
+MATCH: "match"
+WHILE: "while"
+DO: "do"
+FOR: "for"
+IN: "in"
 
 %import common.WS_INLINE
 %ignore WS_INLINE
