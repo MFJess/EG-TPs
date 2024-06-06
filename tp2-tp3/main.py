@@ -20,6 +20,30 @@ if(x){ y = y +1; x = FALSE; };
 while(y<52){y = y*2;};
 """
 
+nested_if = """
+bool t = TRUE;
+bool f = FALSE;
+
+if (f == FALSE) {if(t != FALSE) {s = {TRUE}; };};
+"""
+
+nested_loop= """
+int y; 
+
+y = 5;
+
+int x = 10 + 23; 
+int z = y + x;
+
+
+while(y < x) {while (z >= 20) { z=z-1; y=y+1}; };
+"""
+
+nested_both = """
+int x = 10 + 23; 
+while(x >= 10) { if(x == 11) {x = x-1;};};
+"""
+
 advanced_test = """
 int y; 
 int x = 10 + 23; 
@@ -60,9 +84,19 @@ while(x < y) {while (t == TRUE) { z-1; }; };
 while(x >= 10) { if(x == 11) {x-1;};};
 """
 
-choice = input("Quer um teste simples?(S/N) ")
+tests = [simple_test,nested_if,nested_loop,nested_both,advanced_test]
 
-test = simple_test if choice.lower() == 's' else advanced_test
+prompt = """Qual teste deseja?
+0 -> Simples
+1 -> Cond. Entrelaçado
+2 -> Ciclo Entrelaçado
+3 -> Ciclo com Cond.
+4 -> Avançado
+"""
+
+choice = int(input(prompt))
+
+test = tests[choice]
 
 tree = p.parse(test) # retorna uma tree
 
