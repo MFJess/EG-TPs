@@ -36,7 +36,7 @@ int x = 10 + 23;
 int z = y + x;
 
 
-while(y < x) {while (z >= 20) { z=z-1; y=y+1}; };
+while(y < x) {while (z >= 20) { z=z-1; y=y+1;}; };
 """
 
 nested_both = """
